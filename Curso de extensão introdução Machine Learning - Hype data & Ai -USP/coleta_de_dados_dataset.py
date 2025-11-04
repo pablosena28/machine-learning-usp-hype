@@ -7,19 +7,16 @@ Original file is located at
     https://colab.research.google.com/drive/16egLGyFK68yCO7gp8gnXaAh1XMFFd6xI
 """
 
-# Coleta de Dados: Dataset "Adult" do Censo Norte-Americano
+# Coleta e Preparação de Dados: Dataset "Adult" do Censo Norte-Americano
 
 # ------------------------------------------------------------
 # Importando a biblioteca necessária
 import pandas as pd
 
 # ------------------------------------------------------------
-# Definindo a URL do dataset
-# O dataset foi extraído do censo norte-americano de 1994 e está disponível no UCI Machine Learning Repository
+# Carregando o dataset diretamente da URL oficial do UCI Machine Learning Repository
 url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data'
 
-# ------------------------------------------------------------
-# Carregando os dados diretamente da URL
 # O arquivo não possui cabeçalho, então usamos 'header=None' e definimos os nomes das colunas manualmente
 df = pd.read_csv(url, header=None)
 
@@ -29,12 +26,22 @@ df.columns = [
     'age', 'workclass', 'fnlwgt', 'education', 'education-num',
     'marital-status', 'occupation', 'relationship', 'race', 'sex',
     'capital-gain', 'capital-loss', 'hours-per-week', 'native-country',
-    'income-per-year'
+    'income-per-year'  # Esta é a coluna correta que indica a faixa de renda
 ]
 
 # ------------------------------------------------------------
 # Verificando o tamanho do dataset
-print("📊 Dimensões do dataset (linhas, colunas):", df.shape)
+print("Dimensões do dataset (linhas, colunas):", df.shape)
 
 # Exibindo as primeiras linhas para inspeção inicial
-df.head()
+print("\nAmostra dos dados:")
+print(df.head())
+
+# ------------------------------------------------------------
+# Preparando a variável alvo para classificação binária
+# Criamos uma nova coluna 'income_binary' com 0 para '<=50K' e 1 para '>50K'
+df['income_binary'] = df['income-per-year'].apply(lambda x: 0 if x.strip() == '<=50K' else 1)
+
+# Verificando se a nova coluna foi criada corretamente
+print("\nDistribuição da variável alvo binária:")
+print(df['income_binary'].value_counts())
